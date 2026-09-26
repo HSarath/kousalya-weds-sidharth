@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kousalya &amp; Sidharth | Wedding Invitation</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brick: {
+              50: '#fdf4f3',
+              100: '#fae5e3',
+              200: '#f4cecb',
+              600: '#a32020',
+              700: '#8c1818',
+              800: '#7a1414', // Primary Brick-Red
+              900: '#5c0d0d',
+              950: '#3e0606'
+            },
+            sindoor: '#8B1E1E',
+            kasavu: '#D4AF37', // Traditional Kerala temple gold
+            gold: {
+              200: '#f9e8a2',
+              300: '#f5dc7b',
+              400: '#ecc85c',
+              500: '#d4af37',
+              600: '#b8860b',
+              700: '#8f6805'
+            },
+            sandalsilk: '#FAF4E6',
+            parchment: '#FDFBF7',
+            marigold: '#F59E0B'
+          },
+          fontFamily: {
+            rozha: ['"Rozha One"', 'serif'],
+            cinzel: ['"Cinzel Decorative"', 'serif'],
+            cormorant: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Montserrat"', 'sans-serif'],
+            script: ['"Great Vibes"', 'cursive']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Traditional Silk & Temple Border Aesthetics */
+    body {
+      background-color: #FAF4E6;
+      background-image: 
+        radial-gradient(#D4AF37 0.8px, transparent 0.8px), 
+        radial-gradient(#8B1E1E 0.8px, #FAF4E6 0.8px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+    }
+
+    /* Falling Petals Canvas */
+    #petal-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 25;
+    }
+
+    /* Kasavu Gold borders and cards */
+    .kasavu-card {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF9 100%);
+      border: 3px double #d4af37;
+      box-shadow: 0 15px 35px -5px rgba(122, 20, 20, 0.12), inset 0 0 16px rgba(212, 175, 55, 0.15);
+    }
+
+    .temple-arch-card {
+      border-radius: 40px 40px 20px 20px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF7 100%);
+      box-shadow: 0 15px 35px -5px rgba(122, 20, 20, 0.16), 0 0 0 1px rgba(212, 175, 55, 0.5);
+    }
+
+    /* Hide scrollbar for carousel */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Subtle pulse animation for holy motifs */
+    @keyframes holyPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.4)); }
+      50% { transform: scale(1.04); filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.85)); }
+    }
+    .ganesha-glow {
+      animation: holyPulse 4s ease-in-out infinite;
+    }
+
+    /* Music disc rotation */
+    @keyframes spinDisc {
+      100% { transform: rotate(360deg); }
+    }
+    .spin-veena {
+      animation: spinDisc 6s linear infinite;
+    }
+  </style>
+</head>
+
+<body class="text-stone-800 font-sans antialiased overflow-x-hidden selection:bg-gold-300 selection:text-brick-900">
+
+  <!-- Falling Flowers & Petals Canvas (Marigold, Jasmine & Rose) -->
+  <canvas id="petal-canvas"></canvas>
+
+  <!-- Floating Audio & WhatsApp Share Controls -->
+  <div class="fixed top-4 right-4 z-50 flex items-center space-x-2">
+    <!-- Seetha Kalyana Vaibhogame Music Toggle -->
+    <button id="musicToggleBtn" 
+            onclick="toggleSeethaKalyanamMusic()"
+            class="flex items-center space-x-2 bg-brick-900/90 hover:bg-brick-800 text-gold-300 border border-gold-500/80 px-3.5 py-2 rounded-full shadow-2xl transition duration-300 backdrop-blur-md group"
+            title="Play/Pause Seetha Kalyana Vaibhogame Instrumental">
+      <div id="musicIconWrap" class="w-6 h-6 rounded-full bg-gold-500/20 flex items-center justify-center">
+        <i id="musicIcon" class="fa-solid fa-compact-disc text-sm text-gold-400"></i>
+      </div>
+      <div class="text-left hidden sm:block">
+        <span id="musicText" class="block text-[10px] uppercase font-bold tracking-wider leading-tight">Seetha Kalyanam</span>
+        <span id="musicSubText" class="block text-[8px] text-gold-400/80 font-light">Soft Instrumental</span>
+      </div>
+    </button>
+
+    <!-- Share Invite via WhatsApp Button -->
+    <button onclick="shareInviteWhatsApp()" 
+            class="w-10 h-10 rounded-full bg-emerald-700 hover:bg-emerald-600 text-white flex items-center justify-center border border-emerald-400 shadow-2xl transition backdrop-blur-md"
+            title="Share wedding invite on WhatsApp">
+      <i class="fa-brands fa-whatsapp text-lg"></i>
+    </button>
+  </div>
+
+  <!-- PAGE 1: HERO / AUSPICIOUS GANESHA INVOCATION -->
+  <header class="relative min-h-screen flex flex-col justify-center items-center text-center px-4 py-16 bg-gradient-to-b from-[#FFFDF8] via-[#FAF1DD] to-[#F5E8CB] border-b-8 border-brick-800 overflow-hidden">
+    
+    <!-- Traditional Mango Leaf & Marigold Toran Garland Graphic -->
+    <div class="absolute top-0 left-0 w-full overflow-hidden leading-none z-10 opacity-90 flex justify-center">
+      <svg class="w-full max-w-5xl h-8 sm:h-12" viewBox="0 0 1000 60" fill="none" preserveAspectRatio="none">
+        <path d="M0,0 Q25,35 50,0 Q75,35 100,0 Q125,35 150,0 Q175,35 200,0 Q225,35 250,0 Q275,35 300,0 Q325,35 350,0 Q375,35 400,0 Q425,35 450,0 Q475,35 500,0 Q525,35 550,0 Q575,35 600,0 Q625,35 650,0 Q675,35 700,0 Q725,35 750,0 Q775,35 800,0 Q825,35 850,0 Q875,35 900,0 Q925,35 950,0 Q975,35 1000,0" stroke="#b8860b" stroke-width="4" fill="none"/>
+        <circle cx="50" cy="35" r="7" fill="#F59E0B"/>
+        <circle cx="150" cy="35" r="7" fill="#F59E0B"/>
+        <circle cx="250" cy="35" r="7" fill="#F59E0B"/>
+        <circle cx="350" cy="35" r="7" fill="#F59E0B"/>
+        <circle cx="450" cy="35" r="7" fill="#F59E0B"/>
+        <circle cx="550" cy="35" r="7" fill="#F59E0B"/>
+        <circle cx="650" cy="35" r="7" fill="#F59E0B"/>
+        <circle cx="750" cy="35" r="7" fill="#F59E0B"/>
+        <circle cx="850" cy="35" r="7" fill="#F59E0B"/>
+        <circle cx="950" cy="35" r="7" fill="#F59E0B"/>
+      </svg>
+    </div>
+
+    <!-- Auspicious Lord Ganesha Motif -->
+    <div class="relative z-10 mt-4 mb-2 ganesha-glow">
+      <div class="w-24 h-24 sm:w-28 sm:h-28 mx-auto rounded-full bg-gradient-to-tr from-brick-950 via-brick-800 to-brick-700 p-2 shadow-2xl border-2 border-gold-400 flex items-center justify-center">
+        <svg viewBox="0 0 100 100" class="w-20 h-20 fill-current text-gold-300">
+          <!-- Crown & Mukut -->
+          <path d="M50 12 L56 26 L44 26 Z M42 27 L58 27 L55 33 L45 33 Z" fill="#FFE082"/>
+          <!-- Tilak -->
+          <path d="M47 36 Q50 34 53 36 L52 44 Q50 46 48 44 Z" fill="#b83232"/>
+          <circle cx="50" cy="42" r="1.5" fill="#FFE082"/>
+          <!-- Trunk contour & head -->
+          <path d="M38 38 C32 40 32 50 38 54 C42 56 46 54 48 57 C50 61 46 68 44 71 C41 75 43 81 48 81 C53 81 55 75 54 69 C53 62 57 58 57 48 C57 40 52 36 48 36" fill="none" stroke="#FFE082" stroke-width="3.6" stroke-linecap="round"/>
+          <!-- Large Ears -->
+          <path d="M36 40 C24 38 18 48 26 58 C32 64 36 60 38 55" fill="none" stroke="#FFE082" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M56 40 C68 38 74 48 66 58 C60 64 56 60 54 55" fill="none" stroke="#FFE082" stroke-width="3.2" stroke-linecap="round"/>
+          <!-- Modakam in trunk hand -->
+          <circle cx="68" cy="62" r="4.5" fill="#F59E0B"/>
+          <!-- Ekadanta tusk -->
+          <path d="M43 54 L39 56" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Sanskrit Invocation Line -->
+    <div class="relative z-10 space-y-1 mb-4">
+      <p class="text-brick-800 font-serif font-bold text-sm sm:text-base tracking-[0.25em] uppercase">
+        ॥ श्री गणेशाय नमः ॥
+      </p>
+      <p class="text-[11px] sm:text-xs text-gold-700 tracking-[0.22em] font-semibold uppercase">
+        Shri Ganeshay Namah • Shubham Bhavatu
+      </p>
+    </div>
+
+    <!-- Wedding Announcement Details -->
+    <div class="relative z-10 max-w-2xl mx-auto space-y-3 px-2">
+      <p class="text-xs sm:text-sm tracking-[0.3em] uppercase text-stone-600 font-sans font-medium">
+        With the divine blessings of our ancestors and families
+      </p>
+
+      <!-- Couple Names in Brick-Red Typography -->
+      <div class="py-2">
+        <h1 class="font-rozha text-4xl sm:text-6xl md:text-7xl font-bold text-brick-800 leading-tight">
+          Kousalya
+        </h1>
+        <div class="flex items-center justify-center my-1 space-x-4">
+          <div class="h-0.5 w-14 bg-gradient-to-r from-transparent to-gold-500"></div>
+          <span class="font-script text-gold-600 text-4xl sm:text-5xl font-normal">&amp;</span>
+          <div class="h-0.5 w-14 bg-gradient-to-l from-transparent to-gold-500"></div>
+        </div>
+        <h1 class="font-rozha text-4xl sm:text-6xl md:text-7xl font-bold text-brick-800 leading-tight">
+          Sidharth
+        </h1>
+      </div>
+
+      <p class="text-sm sm:text-base font-cormorant italic text-stone-700 max-w-lg mx-auto font-medium leading-relaxed">
+        Request the honour of your auspicious presence and blessings as we take the sacred seven steps into holy matrimony.
+      </p>
+
+      <!-- Date and City Badge -->
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm font-semibold tracking-wider text-brick-800">
+        <span class="bg-gold-500/20 border border-gold-500/40 px-4 py-1.5 rounded-full flex items-center shadow-sm">
+          <i class="fa-solid fa-om text-gold-600 mr-2"></i> Sunday, 29 November 2026
+        </span>
+        <span class="bg-gold-500/20 border border-gold-500/40 px-4 py-1.5 rounded-full flex items-center shadow-sm">
+          <i class="fa-solid fa-location-dot text-brick-700 mr-2"></i> Trivandrum, Kerala
+        </span>
+      </div>
+    </div>
+
+    <!-- Countdown Timer Card -->
+    <div class="relative z-10 mt-8 w-full max-w-lg mx-auto px-4">
+      <div class="temple-arch-card p-6 sm:p-7 border-2 border-gold-500/50 shadow-2xl relative">
+        <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-brick-800 text-gold-300 border border-gold-400 px-4 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">
+          Auspicious Muhurtham Countdown
+        </div>
+
+        <div class="grid grid-cols-4 gap-2 sm:gap-4 text-center mt-2">
+          <div class="bg-brick-50/90 rounded-2xl p-2.5 sm:p-3 border border-gold-400/40 shadow-inner">
+            <span id="days" class="block text-2xl sm:text-4xl font-rozha font-bold text-brick-900">00</span>
+            <span class="text-[9px] sm:text-xs uppercase font-semibold text-stone-600">Days</span>
+          </div>
+          <div class="bg-brick-50/90 rounded-2xl p-2.5 sm:p-3 border border-gold-400/40 shadow-inner">
+            <span id="hours" class="block text-2xl sm:text-4xl font-rozha font-bold text-brick-900">00</span>
+            <span class="text-[9px] sm:text-xs uppercase font-semibold text-stone-600">Hours</span>
+          </div>
+          <div class="bg-brick-50/90 rounded-2xl p-2.5 sm:p-3 border border-gold-400/40 shadow-inner">
+            <span id="minutes" class="block text-2xl sm:text-4xl font-rozha font-bold text-brick-900">00</span>
+            <span class="text-[9px] sm:text-xs uppercase font-semibold text-stone-600">Mins</span>
+          </div>
+          <div class="bg-brick-50/90 rounded-2xl p-2.5 sm:p-3 border border-gold-400/40 shadow-inner">
+            <span id="seconds" class="block text-2xl sm:text-4xl font-rozha font-bold text-brick-900">00</span>
+            <span class="text-[9px] sm:text-xs uppercase font-semibold text-stone-600">Secs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Down Prompt -->
+    <a href="#couple-story" class="relative z-10 mt-10 text-brick-800/80 hover:text-brick-900 flex flex-col items-center transition-colors">
+      <span class="text-[10px] uppercase tracking-widest font-semibold mb-1">Begin Journey</span>
+      <i class="fa-solid fa-chevron-down animate-bounce text-sm text-gold-600"></i>
+    </a>
+  </header>
+
+  <!-- PAGE 2: COUPLE STORY & PHOTO SPACE -->
+  <section id="couple-story" class="py-20 px-4 max-w-4xl mx-auto">
+    <div class="text-center mb-10">
+      <span class="text-xs uppercase tracking-[0.25em] text-gold-600 font-sans font-bold">Two Souls • One Destiny</span>
+      <h2 class="text-3xl sm:text-5xl font-rozha font-bold text-brick-800 mt-1">The Bride &amp; The Groom</h2>
+      <div class="flex items-center justify-center space-x-2 mt-3">
+        <div class="w-12 h-0.5 bg-gold-500"></div>
+        <i class="fa-solid fa-heart text-brick-700 text-xs"></i>
+        <div class="w-12 h-0.5 bg-gold-500"></div>
+      </div>
+    </div>
+
+    <!-- Couple Photo Frame Card -->
+    <div class="kasavu-card rounded-3xl p-6 sm:p-10 max-w-2xl mx-auto text-center relative overflow-hidden">
+      <!-- Kasavu Corner Motifs -->
+      <div class="absolute top-2 left-2 text-gold-500 opacity-60 text-lg">❖</div>
+      <div class="absolute top-2 right-2 text-gold-500 opacity-60 text-lg">❖</div>
+      <div class="absolute bottom-2 left-2 text-gold-500 opacity-60 text-lg">❖</div>
+      <div class="absolute bottom-2 right-2 text-gold-500 opacity-60 text-lg">❖</div>
+
+      <!-- Photo Display Area (Supports instant local replacement) -->
+      <div class="relative w-full aspect-[4/3] sm:aspect-[16/10] rounded-2xl overflow-hidden bg-sandalsilk border-2 border-dashed border-gold-500/80 flex flex-col items-center justify-center p-3 group">
+        
+        <img id="couplePhotoPreview" 
+             src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=80" 
+             alt="Kousalya & Sidharth" 
+             class="w-full h-full object-cover rounded-xl transition duration-500">
+
+        <!-- Hover overlay to upload own picture directly -->
+        <div class="absolute inset-0 bg-brick-950/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center">
+          <label for="photoUploadInput" class="cursor-pointer bg-gold-500 hover:bg-gold-400 text-brick-950 px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-xl flex items-center space-x-2 transition">
+            <i class="fa-solid fa-camera"></i>
+            <span>Upload Couple Photo</span>
+          </label>
+          <p class="text-[11px] text-gold-200 mt-2 font-light">Click to test your own photo in this frame</p>
+          <input type="file" id="photoUploadInput" accept="image/*" class="hidden" onchange="previewCoupleImage(event)">
+        </div>
+      </div>
+
+      <!-- Couple Bio & Family Blessings -->
+      <div class="mt-8 space-y-3">
+        <h3 class="font-rozha text-2xl sm:text-3xl text-brick-800 font-bold">Kousalya &amp; Sidharth</h3>
+        <p class="text-xs uppercase tracking-widest text-gold-700 font-semibold font-sans">#KousalyaWedsSidharth</p>
+        
+        <p class="text-sm sm:text-base font-cormorant italic text-stone-700 max-w-lg mx-auto leading-relaxed pt-2">
+          "Bound by culture, blessed by elders, and united by devotion. We invite you to join our families as we begin this lifelong journey of love, friendship, and companionship."
+        </p>
+
+        <!-- Traditional Sanskrit Mangalya Slokam -->
+        <div class="pt-4 border-t border-gold-300/60 mt-4 text-brick-800 font-serif text-xs sm:text-sm font-semibold leading-relaxed">
+          <span>माङ्गल्यं तन्तुनानेन मम जीवनहेतुना । कण्ठे बध्नामि सुभगे सञ्जीव शरदः शतम् ॥</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW SECTION: CAPTURED MEMORIES (8 ENGAGEMENT PHOTOS SCROLLING CAROUSEL) -->
+  <section id="memories" class="py-20 px-4 bg-gradient-to-b from-[#FFFDF9] via-[#FAF4E6] to-[#FFFDF9] border-y-2 border-gold-500/30 relative">
+    <div class="max-w-6xl mx-auto">
+      
+      <div class="text-center mb-10">
+        <span class="text-xs uppercase tracking-[0.25em] text-gold-600 font-sans font-bold">Cherished Moments</span>
+        <h2 class="text-3xl sm:text-5xl font-rozha font-bold text-brick-800 mt-1">Captured Memories</h2>
+        <p class="text-xs sm:text-sm text-stone-600 mt-2 font-medium">Glances of our engagement ceremony &amp; pre-wedding celebrations</p>
+        <div class="flex items-center justify-center space-x-2 mt-3">
+          <div class="w-12 h-0.5 bg-gold-500"></div>
+          <i class="fa-solid fa-camera-retro text-gold-600 text-xs"></i>
+          <div class="w-12 h-0.5 bg-gold-500"></div>
+        </div>
+      </div>
+
+      <!-- Carousel Navigation Controls & Carousel Container -->
+      <div class="relative group">
+        <!-- Scroll Left Button -->
+        <button onclick="scrollCarousel('left')" 
+                class="hidden md:flex absolute -left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-brick-800 hover:bg-brick-900 text-gold-300 items-center justify-center shadow-2xl border-2 border-gold-400 transition transform hover:scale-105"
+                title="Scroll Left">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <!-- Scroll Right Button -->
+        <button onclick="scrollCarousel('right')" 
+                class="hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-brick-800 hover:bg-brick-900 text-gold-300 items-center justify-center shadow-2xl border-2 border-gold-400 transition transform hover:scale-105"
+                title="Scroll Right">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <!-- 8 Photos Horizontal Scrolling Track -->
+        <div id="memoryCarousel" class="flex gap-6 overflow-x-auto no-scrollbar scroll-smooth py-4 px-2 snap-x snap-mandatory">
+          
+          <!-- Photo 1: The Auspicious Beginning -->
+          <div class="snap-center shrink-0 w-[270px] sm:w-[310px] bg-white rounded-2xl p-3 border-2 border-gold-400/80 shadow-lg hover:shadow-2xl transition duration-300 flex flex-col">
+            <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-sandalsilk">
+              <img id="galleryImg1" src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80" alt="Engagement Memory 1" class="w-full h-full object-cover">
+              <label for="uploadImg1" class="absolute bottom-2 right-2 bg-brick-900/80 hover:bg-brick-900 text-gold-300 p-2 rounded-full cursor-pointer shadow border border-gold-400/50" title="Replace Photo">
+                <i class="fa-solid fa-pen text-xs"></i>
+                <input type="file" id="uploadImg1" accept="image/*" class="hidden" onchange="previewCarouselImage(event, 'galleryImg1')">
+              </label>
+            </div>
+            <div class="pt-3 text-center">
+              <span class="text-[10px] uppercase font-bold tracking-widest text-gold-600 block">Memory 01</span>
+              <h4 class="font-rozha text-brick-800 font-bold text-base mt-0.5">The Auspicious Start</h4>
+              <p class="text-xs font-cormorant italic text-stone-600">Exchange of traditional rings</p>
+            </div>
+          </div>
+
+          <!-- Photo 2: Sacred Promises -->
+          <div class="snap-center shrink-0 w-[270px] sm:w-[310px] bg-white rounded-2xl p-3 border-2 border-gold-400/80 shadow-lg hover:shadow-2xl transition duration-300 flex flex-col">
+            <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-sandalsilk">
+              <img id="galleryImg2" src="https://images.unsplash.com/photo-1609151162377-794fad6d7e00?auto=format&fit=crop&w=600&q=80" alt="Engagement Memory 2" class="w-full h-full object-cover">
+              <label for="uploadImg2" class="absolute bottom-2 right-2 bg-brick-900/80 hover:bg-brick-900 text-gold-300 p-2 rounded-full cursor-pointer shadow border border-gold-400/50" title="Replace Photo">
+                <i class="fa-solid fa-pen text-xs"></i>
+                <input type="file" id="uploadImg2" accept="image/*" class="hidden" onchange="previewCarouselImage(event, 'galleryImg2')">
+              </label>
+            </div>
+            <div class="pt-3 text-center">
+              <span class="text-[10px] uppercase font-bold tracking-widest text-gold-600 block">Memory 02</span>
+              <h4 class="font-rozha text-brick-800 font-bold text-base mt-0.5">Nischayam Moments</h4>
+              <p class="text-xs font-cormorant italic text-stone-600">Sealed in the presence of elders</p>
+            </div>
+          </div>
+
+          <!-- Photo 3: Ring Ceremony -->
+          <div class="snap-center shrink-0 w-[270px] sm:w-[310px] bg-white rounded-2xl p-3 border-2 border-gold-400/80 shadow-lg hover:shadow-2xl transition duration-300 flex flex-col">
+            <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-sandalsilk">
+              <img id="galleryImg3" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" alt="Engagement Memory 3" class="w-full h-full object-cover">
+              <label for="uploadImg3" class="absolute bottom-2 right-2 bg-brick-900/80 hover:bg-brick-900 text-gold-300 p-2 rounded-full cursor-pointer shadow border border-gold-400/50" title="Replace Photo">
+                <i class="fa-solid fa-pen text-xs"></i>
+                <input type="file" id="uploadImg3" accept="image/*" class="hidden" onchange="previewCarouselImage(event, 'galleryImg3')">
+              </label>
+            </div>
+            <div class="pt-3 text-center">
+              <span class="text-[10px] uppercase font-bold tracking-widest text-gold-600 block">Memory 03</span>
+              <h4 class="font-rozha text-brick-800 font-bold text-base mt-0.5">Golden Bond</h4>
+              <p class="text-xs font-cormorant italic text-stone-600">The promise of a lifetime</p>
+            </div>
+          </div>
+
+          <!-- Photo 4: Blessed Smiles -->
+          <div class="snap-center shrink-0 w-[270px] sm:w-[310px] bg-white rounded-2xl p-3 border-2 border-gold-400/80 shadow-lg hover:shadow-2xl transition duration-300 flex flex-col">
+            <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-sandalsilk">
+              <img id="galleryImg4" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80" alt="Engagement Memory 4" class="w-full h-full object-cover">
+              <label for="uploadImg4" class="absolute bottom-2 right-2 bg-brick-900/80 hover:bg-brick-900 text-gold-300 p-2 rounded-full cursor-pointer shadow border border-gold-400/50" title="Replace Photo">
+                <i class="fa-solid fa-pen text-xs"></i>
+                <input type="file" id="uploadImg4" accept="image/*" class="hidden" onchange="previewCarouselImage(event, 'galleryImg4')">
+              </label>
+            </div>
+            <div class="pt-3 text-center">
+              <span class="text-[10px] uppercase font-bold tracking-widest text-gold-600 block">Memory 04</span>
+              <h4 class="font-rozha text-brick-800 font-bold text-base mt-0.5">Shared Smiles</h4>
+              <p class="text-xs font-cormorant italic text-stone-600">Laughter and joyous wishes</p>
+            </div>
+          </div>
+
+          <!-- Photo 5: Family Celebrations -->
+          <div class="snap-center shrink-0 w-[270px] sm:w-[310px] bg-white rounded-2xl p-3 border-2 border-gold-400/80 shadow-lg hover:shadow-2xl transition duration-300 flex flex-col">
+            <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-sandalsilk">
+              <img id="galleryImg5" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80" alt="Engagement Memory 5" class="w-full h-full object-cover">
+              <label for="uploadImg5" class="absolute bottom-2 right-2 bg-brick-900/80 hover:bg-brick-900 text-gold-300 p-2 rounded-full cursor-pointer shadow border border-gold-400/50" title="Replace Photo">
+                <i class="fa-solid fa-pen text-xs"></i>
+                <input type="file" id="uploadImg5" accept="image/*" class="hidden" onchange="previewCarouselImage(event, 'galleryImg5')">
+              </label>
+            </div>
+            <div class="pt-3 text-center">
+              <span class="text-[10px] uppercase font-bold tracking-widest text-gold-600 block">Memory 05</span>
+              <h4 class="font-rozha text-brick-800 font-bold text-base mt-0.5">With Beloved Kin</h4>
+              <p class="text-xs font-cormorant italic text-stone-600">Warmth of welcoming families</p>
+            </div>
+          </div>
+
+          <!-- Photo 6: Floral Garlands -->
+          <div class="snap-center shrink-0 w-[270px] sm:w-[310px] bg-white rounded-2xl p-3 border-2 border-gold-400/80 shadow-lg hover:shadow-2xl transition duration-300 flex flex-col">
+            <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-sandalsilk">
+              <img id="galleryImg6" src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=600&q=80" alt="Engagement Memory 6" class="w-full h-full object-cover">
+              <label for="uploadImg6" class="absolute bottom-2 right-2 bg-brick-900/80 hover:bg-brick-900 text-gold-300 p-2 rounded-full cursor-pointer shadow border border-gold-400/50" title="Replace Photo">
+                <i class="fa-solid fa-pen text-xs"></i>
+                <input type="file" id="uploadImg6" accept="image/*" class="hidden" onchange="previewCarouselImage(event, 'galleryImg6')">
+              </label>
+            </div>
+            <div class="pt-3 text-center">
+              <span class="text-[10px] uppercase font-bold tracking-widest text-gold-600 block">Memory 06</span>
+              <h4 class="font-rozha text-brick-800 font-bold text-base mt-0.5">Fragrant Malas</h4>
+              <p class="text-xs font-cormorant italic text-stone-600">Roses, lotus &amp; jasmine garlands</p>
+            </div>
+          </div>
+
+          <!-- Photo 7: Traditional Attire -->
+          <div class="snap-center shrink-0 w-[270px] sm:w-[310px] bg-white rounded-2xl p-3 border-2 border-gold-400/80 shadow-lg hover:shadow-2xl transition duration-300 flex flex-col">
+            <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-sandalsilk">
+              <img id="galleryImg7" src="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=600&q=80" alt="Engagement Memory 7" class="w-full h-full object-cover">
+              <label for="uploadImg7" class="absolute bottom-2 right-2 bg-brick-900/80 hover:bg-brick-900 text-gold-300 p-2 rounded-full cursor-pointer shadow border border-gold-400/50" title="Replace Photo">
+                <i class="fa-solid fa-pen text-xs"></i>
+                <input type="file" id="uploadImg7" accept="image/*" class="hidden" onchange="previewCarouselImage(event, 'galleryImg7')">
+              </label>
+            </div>
+            <div class="pt-3 text-center">
+              <span class="text-[10px] uppercase font-bold tracking-widest text-gold-600 block">Memory 07</span>
+              <h4 class="font-rozha text-brick-800 font-bold text-base mt-0.5">Kasavu &amp; Silk</h4>
+              <p class="text-xs font-cormorant italic text-stone-600">Adorned in ethnic splendour</p>
+            </div>
+          </div>
+
+          <!-- Photo 8: Looking Ahead -->
+          <div class="snap-center shrink-0 w-[270px] sm:w-[310px] bg-white rounded-2xl p-3 border-2 border-gold-400/80 shadow-lg hover:shadow-2xl transition duration-300 flex flex-col">
+            <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-sandalsilk">
+              <img id="galleryImg8" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80" alt="Engagement Memory 8" class="w-full h-full object-cover">
+              <label for="uploadImg8" class="absolute bottom-2 right-2 bg-brick-900/80 hover:bg-brick-900 text-gold-300 p-2 rounded-full cursor-pointer shadow border border-gold-400/50" title="Replace Photo">
+                <i class="fa-solid fa-pen text-xs"></i>
+                <input type="file" id="uploadImg8" accept="image/*" class="hidden" onchange="previewCarouselImage(event, 'galleryImg8')">
+              </label>
+            </div>
+            <div class="pt-3 text-center">
+              <span class="text-[10px] uppercase font-bold tracking-widest text-gold-600 block">Memory 08</span>
+              <h4 class="font-rozha text-brick-800 font-bold text-base mt-0.5">Towards Forever</h4>
+              <p class="text-xs font-cormorant italic text-stone-600">Eager for Nov 29, 2026</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Mobile Swipe Helper Indicator -->
+        <div class="flex items-center justify-center space-x-1.5 mt-4 text-gold-600 text-xs font-semibold">
+          <i class="fa-solid fa-angles-left animate-pulse"></i>
+          <span class="text-[11px] tracking-wider uppercase">Swipe / Scroll to view all 8 photos</span>
+          <i class="fa-solid fa-angles-right animate-pulse"></i>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PAGE 3: MUHURTHAM, VENUE & CEREMONY DETAILS -->
+  <section id="event-details" class="py-20 px-4 bg-gradient-to-b from-brick-900 to-brick-950 text-gold-100 border-t-8 border-gold-500 relative">
+    <div class="max-w-4xl mx-auto">
+      
+      <!-- Section Title -->
+      <div class="text-center mb-14">
+        <div class="inline-block p-2 rounded-full border border-gold-400/40 mb-2">
+          <i class="fa-solid fa-bell-concierge text-gold-400 text-lg"></i>
+        </div>
+        <span class="text-xs uppercase tracking-[0.25em] text-gold-300 font-sans block">Auspicious Occasion</span>
+        <h2 class="text-3xl sm:text-5xl font-rozha font-bold text-white mt-1">Muhurtham &amp; Venue</h2>
+        <p class="text-xs sm:text-sm text-gold-200/80 mt-2 font-light">Join us in celebrating this sacred union in the royal city of Trivandrum</p>
+        <div class="w-16 h-0.5 bg-gold-400 mx-auto mt-4"></div>
+      </div>
+
+      <!-- Main Venue & Timing Card -->
+      <div class="bg-brick-900/90 border-2 border-gold-500/70 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-md relative overflow-hidden">
+        
+        <!-- Temple Pillared Background Accent Motif -->
+        <div class="absolute -right-10 -bottom-10 opacity-10 text-gold-400 pointer-events-none">
+          <i class="fa-solid fa-gopuram text-9xl"></i>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          
+          <!-- Event Timings & Traditional Rituals -->
+          <div class="space-y-6 text-left">
+            <div>
+              <span class="bg-gold-500 text-brick-950 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">
+                Shubha Muhurtham
+              </span>
+              <h3 class="text-2xl sm:text-3xl font-rozha text-gold-300 font-bold mt-3">
+                Thaali Kettu &amp; Kalyanam
+              </h3>
+              <p class="text-xs uppercase tracking-widest text-gold-200 font-sans mt-1">
+                Sunday, 29 November 2026
+              </p>
+            </div>
+
+            <div class="space-y-4 border-l-2 border-gold-500/40 pl-4 py-1">
+              <div>
+                <span class="text-xs font-semibold text-gold-400 uppercase tracking-wider block">
+                  <i class="fa-regular fa-clock mr-1.5"></i> Auspicious Muhurtham
+                </span>
+                <p class="text-base sm:text-lg font-serif font-bold text-white">9:30 AM - 10:30 AM IST</p>
+              </div>
+
+              <div>
+                <span class="text-xs font-semibold text-gold-400 uppercase tracking-wider block">
+                  <i class="fa-solid fa-utensils mr-1.5"></i> Traditional Sadhya (Feast)
+                </span>
+                <p class="text-base sm:text-lg font-serif font-bold text-white">11:30 AM Onwards</p>
+                <p class="text-xs text-gold-200/80 font-light">Authentic Kerala Sadhya served on plantain leaves</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Venue Details Box with Google Maps Link -->
+          <div class="bg-brick-950/80 border border-gold-500/40 rounded-2xl p-6 flex flex-col justify-between text-left space-y-5">
+            <div>
+              <div class="flex items-center space-x-2 text-gold-400 mb-2">
+                <i class="fa-solid fa-location-dot text-base text-gold-500"></i>
+                <span class="text-xs uppercase tracking-widest font-bold">Wedding Mandapam</span>
+              </div>
+              <h4 class="text-xl sm:text-2xl font-rozha text-white font-bold leading-snug">
+                Sree Vaikundam Kalyana Mandapam
+              </h4>
+              <p class="text-xs sm:text-sm text-gold-200/90 mt-2 font-light leading-relaxed">
+                Trivandrum (Thiruvananthapuram), Kerala.<br>
+                Auspicious gathering of family, relatives, and well-wishers.
+              </p>
+            </div>
+
+            <!-- Action Buttons: Google Maps & Add to Calendar -->
+            <div class="space-y-2.5 pt-2">
+              <a href="https://maps.app.goo.gl/68uWwj9VHb4LpovB8" 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 class="w-full bg-gold-500 hover:bg-gold-400 text-brick-950 font-bold text-xs uppercase tracking-widest py-3 px-4 rounded-xl flex items-center justify-center space-x-2 shadow-lg transition transform hover:-translate-y-0.5">
+                <i class="fa-solid fa-map-location-dot text-sm"></i>
+                <span>Open in Google Maps</span>
+              </a>
+
+              <button onclick="addToCalendarHinduWedding()" 
+                      class="w-full border border-gold-400/60 hover:bg-gold-500/10 text-gold-300 font-semibold text-xs uppercase tracking-widest py-2.5 px-4 rounded-xl flex items-center justify-center space-x-2 transition">
+                <i class="fa-regular fa-calendar-check text-sm text-gold-400"></i>
+                <span>Add To Google Calendar</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Warm Family Welcome Note -->
+      <div class="text-center mt-12 space-y-2">
+        <p class="text-xs sm:text-sm uppercase tracking-[0.25em] text-gold-400 font-semibold font-sans">
+          Awaiting Your Gracious Presence &amp; Blessings
+        </p>
+        <p class="font-cormorant italic text-lg sm:text-xl text-gold-100/90">
+          Families of Kousalya &amp; Sidharth
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-brick-950 text-gold-200 py-12 px-4 text-center border-t border-gold-600/40">
+    <div class="max-w-md mx-auto space-y-3">
+      <div class="w-12 h-12 rounded-full border border-gold-400/60 flex items-center justify-center mx-auto text-gold-300">
+        <span class="font-rozha text-sm">K &amp; S</span>
+      </div>
+      <p class="text-base font-rozha text-white">Kousalya &amp; Sidharth</p>
+      <p class="text-[11px] uppercase tracking-widest text-gold-400 font-sans">#KousalyaWedsSidharth • 29 Nov 2026</p>
+      <p class="text-[11px] text-stone-400 font-light pt-2">
+        Sree Vaikundam Kalyana Mandapam, Trivandrum
+      </p>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Message -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-brick-900 text-gold-200 border border-gold-400 px-6 py-3 rounded-full shadow-2xl text-xs flex items-center space-x-3 backdrop-blur-md">
+    <i class="fa-solid fa-circle-check text-gold-400 text-base"></i>
+    <span id="toastMessage">Invitation link copied!</span>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    /* ========================================================
+       1. LIVE COUNTDOWN TIMER TO NOV 29, 2026 (09:30 AM IST)
+       ======================================================== */
+    function initWeddingCountdown() {
+      const targetTimestamp = new Date("2026-11-29T09:30:00+05:30").getTime();
+
+      function updateTimer() {
+        const now = new Date().getTime();
+        const difference = targetTimestamp - now;
+
+        if (difference > 0) {
+          const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+          document.getElementById('days').innerText = String(days).padStart(2, '0');
+          document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+          document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+          document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+        } else {
+          document.getElementById('days').innerText = "00";
+          document.getElementById('hours').innerText = "00";
+          document.getElementById('minutes').innerText = "00";
+          document.getElementById('seconds').innerText = "00";
+        }
+      }
+
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+
+    /* ========================================================
+       2. FALLING FLOWER PETAL SHOWER (JASMINE, MARIGOLD, ROSE)
+       ======================================================== */
+    const canvas = document.getElementById('petal-canvas');
+    const ctx = canvas.getContext('2d');
+    let petals = [];
+
+    function setupCanvasSize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', setupCanvasSize);
+    setupCanvasSize();
+
+    class FlowerPetal {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * -canvas.height;
+        this.size = Math.random() * 8 + 6;
+        this.speedY = Math.random() * 1.1 + 0.6;
+        this.speedX = Math.random() * 0.8 - 0.4;
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = (Math.random() - 0.5) * 2;
+        this.type = Math.floor(Math.random() * 3); // 0: Marigold, 1: Rose, 2: Jasmine
+        this.opacity = Math.random() * 0.45 + 0.45;
+      }
+
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX + Math.sin(this.y * 0.015) * 0.4;
+        this.rotation += this.rotationSpeed;
+
+        if (this.y > canvas.height + 20) {
+          this.reset();
+          this.y = -10;
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.globalAlpha = this.opacity;
+
+        ctx.beginPath();
+        if (this.type === 0) {
+          // Marigold Petal (Orange-Gold)
+          ctx.fillStyle = "#F59E0B";
+          ctx.ellipse(0, 0, this.size, this.size * 0.55, 0, 0, Math.PI * 2);
+        } else if (this.type === 1) {
+          // Rose Petal (Deep Terracotta / Brick Red)
+          ctx.fillStyle = "#8B1E1E";
+          ctx.ellipse(0, 0, this.size, this.size * 0.7, 0, 0, Math.PI * 2);
+        } else {
+          // Jasmine Bud (Cream White with a gentle tint)
+          ctx.fillStyle = "#FFFDF2";
+          ctx.ellipse(0, 0, this.size * 0.7, this.size * 0.45, 0, 0, Math.PI * 2);
+        }
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < 45; i++) {
+      petals.push(new FlowerPetal());
+    }
+
+    function renderPetalAnimation() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      petals.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(renderPetalAnimation);
+    }
+    renderPetalAnimation();
+
+    /* ========================================================
+       3. CAROUSEL SCROLL & IMAGE REPLACEMENT UTILITY
+       ======================================================== */
+    function scrollCarousel(direction) {
+      const carousel = document.getElementById('memoryCarousel');
+      const scrollAmount = 320;
+      if (direction === 'left') {
+        carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }
+
+    function previewCarouselImage(event, targetImgId) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById(targetImgId).src = e.target.result;
+          showToastNotification("Engagement photo updated!");
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function previewCoupleImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('couplePhotoPreview').src = e.target.result;
+          showToastNotification("Couple photo updated beautifully!");
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    /* ========================================================
+       4. SEETHA KALYANA VAIBHOGAME INSTRUMENTAL TONE
+       Synthesized with Web Audio API (Carnatic Kurinji/Kalyani ragam phrasing)
+       ======================================================== */
+    let audioCtx = null;
+    let isPlayingSeethaKalyanam = false;
+    let melodyInterval = null;
+
+    // Traditional Carnatic Swaras for "Seetha Kalyana Vaibhogame, Rama Kalyana Vaibhogame"
+    // Notes approximated in Hz:
+    // P = 392.00, D2 = 440.00, S = 523.25, R2 = 587.33, G3 = 659.25, M1 = 698.46
+    const seethaKalyanaMelody = [
+      { f: 523.25, d: 0.5 }, // Sa  - See
+      { f: 587.33, d: 0.5 }, // Ri  - tha
+      { f: 659.25, d: 0.7 }, // Ga  - Kal-
+      { f: 659.25, d: 0.4 }, // Ga  - ya-
+      { f: 587.33, d: 0.4 }, // Ri  - na
+      { f: 523.25, d: 0.8 }, // Sa  - Vai-
+      { f: 440.00, d: 0.5 }, // Dha - bho-
+      { f: 392.00, d: 0.9 }, // Pa  - game...
+      { f: 0,      d: 0.3 }, // rest
+      { f: 392.00, d: 0.5 }, // Pa  - Ra-
+      { f: 440.00, d: 0.5 }, // Dha - ma
+      { f: 523.25, d: 0.7 }, // Sa  - Kal-
+      { f: 587.33, d: 0.4 }, // Ri  - ya-
+      { f: 523.25, d: 0.4 }, // Sa  - na
+      { f: 440.00, d: 0.8 }, // Dha - Vai-
+      { f: 392.00, d: 1.1 }, // Pa  - game...
+      { f: 0,      d: 0.5 }  // pause before loop
+    ];
+
+    function playTraditionalNote(freq, duration) {
+      if (!audioCtx || freq <= 0) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const harmonicOsc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        // Flute / Veena soft timbre mix
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        harmonicOsc.type = "triangle";
+        harmonicOsc.frequency.setValueAtTime(freq * 2, audioCtx.currentTime);
+
+        // Soft ADSR envelope for Carnatic flute-like smoothness
+        const now = audioCtx.currentTime;
+        gainNode.gain.setValueAtTime(0, now);
+        gainNode.gain.linearRampToValueAtTime(0.08, now + 0.08); // gentle attack
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.15); // soft release
+
+        osc.connect(gainNode);
+        harmonicOsc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        osc.start(now);
+        harmonicOsc.start(now);
+        osc.stop(now + duration + 0.2);
+        harmonicOsc.stop(now + duration + 0.2);
+      } catch (e) {
+        console.warn("Audio playback issue:", e);
+      }
+    }
+
+    function startMelodyLoop() {
+      let noteIndex = 0;
+
+      function scheduleNextNote() {
+        if (!isPlayingSeethaKalyanam) return;
+        const note = seethaKalyanaMelody[noteIndex];
+        playTraditionalNote(note.f, note.d);
+
+        noteIndex = (noteIndex + 1) % seethaKalyanaMelody.length;
+        melodyInterval = setTimeout(scheduleNextNote, note.d * 1000);
+      }
+
+      scheduleNextNote();
+    }
+
+    function toggleSeethaKalyanamMusic() {
+      const icon = document.getElementById('musicIcon');
+      const text = document.getElementById('musicText');
+
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      if (!isPlayingSeethaKalyanam) {
+        isPlayingSeethaKalyanam = true;
+        icon.classList.add('spin-veena', 'text-gold-400');
+        text.innerText = "Playing Melody";
+        showToastNotification("Seetha Kalyana Vaibhogame playing 🪈");
+        startMelodyLoop();
+      } else {
+        isPlayingSeethaKalyanam = false;
+        clearTimeout(melodyInterval);
+        icon.classList.remove('spin-veena', 'text-gold-400');
+        text.innerText = "Seetha Kalyanam";
+        showToastNotification("Melody paused");
+      }
+    }
+
+    /* ========================================================
+       5. WHATSAPP & SHARE INVITATION
+       ======================================================== */
+    function shareInviteWhatsApp() {
+      const shareUrl = window.location.href;
+      const message = `✨ Traditional Wedding Invitation ✨\n\nWith the blessings of Almighty and our families, we cordially invite you to celebrate the holy matrimony of\n*Kousalya & Sidharth*\n\n📅 Date: Sunday, 29 November 2026\n⏰ Muhurtham: 9:30 AM - 10:30 AM\n📍 Venue: Sree Vaikundam Kalyana Mandapam, Trivandrum\n\nClick here to view our invitation:\n${shareUrl}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    /* ========================================================
+       6. ADD TO GOOGLE CALENDAR
+       ======================================================== */
+    function addToCalendarHinduWedding() {
+      const title = "Kousalya & Sidharth Wedding | Sree Vaikundam Mandapam";
+      const location = "Sree Vaikundam Kalyana Mandapam, Trivandrum, Kerala";
+      const details = "Shubha Muhurtham & Wedding of Kousalya and Sidharth on November 29, 2026 followed by traditional Kerala Sadhya.";
+      const start = "20261129T093000";
+      const end = "20261129T143000";
+
+      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+      window.open(gcalUrl, '_blank');
+    }
+
+    /* ========================================================
+       7. TOAST NOTIFICATION UTILITY
+       ======================================================== */
+    function showToastNotification(text) {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      toastMessage.innerText = text;
+
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3500);
+    }
+
+    // Initialize countdown timer on document ready
+    window.addEventListener('DOMContentLoaded', () => {
+      initWeddingCountdown();
+    });
+  </script>
+</body>
+</html>
